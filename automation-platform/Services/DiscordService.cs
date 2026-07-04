@@ -1,4 +1,5 @@
 ﻿using automation_platform.Dtos;
+using automation_platform.Models;
 
 namespace automation_platform.Services
 {
@@ -7,6 +8,14 @@ namespace automation_platform.Services
         HttpClient client;
         IConfiguration config;
         string webhookUrl;
+        private readonly Workflow workflow = new()
+        {
+            Trigger = "webhook",
+            Steps = new List<string>
+            {
+                "discord"
+            }
+        };
         
         public DiscordService(HttpClient client, IConfiguration config) 
         { 
