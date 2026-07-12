@@ -9,6 +9,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<IDiscordService, DiscordService>();
+builder.Services.AddScoped<IWorkflowService, WorkflowService>();
+builder.Services.AddScoped<IWorkflowStepHandler, DiscordStepHandler>();
 
 builder.Services.AddHttpClient();
 

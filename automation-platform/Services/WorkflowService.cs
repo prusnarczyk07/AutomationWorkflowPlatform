@@ -5,11 +5,11 @@ namespace automation_platform.Services
 {
     public class WorkflowService : IWorkflowService
     {
-        private readonly IDiscordService discordService;
+        private readonly IEnumerable<IWorkflowStepHandler> handlers;
 
-        public WorkflowService(IDiscordService discordService)
+        public WorkflowService(IEnumerable<IWorkflowStepHandler> handlers)
         {
-            this.discordService = discordService;
+            this.handlers = handlers;
         }
 
         public async Task<bool> ExecuteWorkflow(Workflow workflow)
@@ -21,20 +21,15 @@ namespace automation_platform.Services
                 Description = "step executed"
             };
 
-            foreach (string step in workflow.Steps){
-                if (step == "discord")
-                {
-                    if (!await discordService.SendDiscordMessage(dto))
-                        return false;
-                }
-                else if (step == "save")
-                {
+            foreach (string step in workflow.Steps)
+            {
+                var handler = handlers.FirstOrDefault(x => x.StepName == step);
 
-                }
-                else if (step == "email")
-                {
-
-                }
+                if (handler is null)
+                    return false;
+                
+                if (!await handler.Execute(dto))
+                    return false;
             }
             return true;
         }
