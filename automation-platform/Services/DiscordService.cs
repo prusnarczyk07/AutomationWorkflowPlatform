@@ -8,14 +8,6 @@ namespace automation_platform.Services
         HttpClient client;
         IConfiguration config;
         string webhookUrl;
-        private readonly Workflow workflow = new()
-        {
-            Trigger = "webhook",
-            Steps = new List<string>
-            {
-                "discord"
-            }
-        };
         
         public DiscordService(HttpClient client, IConfiguration config) 
         { 
@@ -34,7 +26,7 @@ namespace automation_platform.Services
 
             var result = await client.PostAsJsonAsync(webhookUrl, payload);
 
-            return true;
+            return result.IsSuccessStatusCode;
         }
     }
 }

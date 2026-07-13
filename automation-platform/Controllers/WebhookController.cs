@@ -19,16 +19,8 @@ namespace automation_platform.Controllers
 
         [HttpPost]
         public async Task<IActionResult> AddWebhook(WebhookDto dto)
-        {
-            var workflow = new Workflow
-            {
-                Steps = new List<string>
-                {
-                    "discord"
-                }
-            };
-            
-            var request = await service.ExecuteWorkflow(workflow);
+        {            
+            var request = await service.ExecuteWebhookWorkflow();
             logger.LogInformation($"Webhook: \n Id: {dto.Id},\n Name: {dto.Name},\n Description: {dto.Description}");
 
             if (request is true)

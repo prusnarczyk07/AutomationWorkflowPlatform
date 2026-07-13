@@ -1,15 +1,18 @@
-﻿using automation_platform.Models;
-using automation_platform.Dtos;
+﻿using automation_platform.Dtos;
+using automation_platform.Models;
+using automation_platform.Repositories;
 
 namespace automation_platform.Services
 {
     public class WorkflowService : IWorkflowService
     {
         private readonly IEnumerable<IWorkflowStepHandler> handlers;
+        private readonly IWorkflowRepository repository;
 
-        public WorkflowService(IEnumerable<IWorkflowStepHandler> handlers)
+        public WorkflowService(IEnumerable<IWorkflowStepHandler> handlers, IWorkflowRepository repository)
         {
             this.handlers = handlers;
+            this.repository = repository;
         }
 
         public async Task<bool> ExecuteWorkflow(Workflow workflow)
@@ -32,6 +35,16 @@ namespace automation_platform.Services
                     return false;
             }
             return true;
+        }
+
+        public async Task<bool> ExecuteWebhookWorkflow()
+        {
+            var workflow = await repository.GetByTrigger("webhook");
+
+            if (workflow is null)
+                return false;
+
+            return await ExecuteWorkflow(workflow);
         }
     }
 }
