@@ -46,5 +46,16 @@ namespace automation_platform.Services
 
             return await ExecuteWorkflow(workflow);
         }
+
+        public async Task CreateWorkflow(WorkflowDto dto)
+        {
+            var workflow = new Workflow
+            {
+                Trigger = dto.Trigger,
+                Steps = dto.Steps
+            };
+
+            await repository.Add(workflow);
+        }
     }
 }

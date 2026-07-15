@@ -5,5 +5,6 @@ namespace automation_platform.Repositories
     public interface IWorkflowRepository
     {
         Task<Workflow?> GetByTrigger(string trigger);
+        Task Add(Workflow workflow);
     }
 }

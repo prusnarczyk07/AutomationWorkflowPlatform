@@ -12,6 +12,13 @@ namespace automation_platform.Repositories
                 Steps = new List<string> { "discord" }
             }
         };
+
+        public Task Add(Workflow workflow)
+        {
+            workflows.Add(workflow);
+
+            return Task.CompletedTask;
+        }
         
         public Task<Workflow?> GetByTrigger(string trigger)
         {

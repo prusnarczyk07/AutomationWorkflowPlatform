@@ -1,4 +1,5 @@
-﻿using automation_platform.Models;
+﻿using automation_platform.Dtos;
+using automation_platform.Models;
 
 namespace automation_platform.Services
 {
@@ -6,5 +7,6 @@ namespace automation_platform.Services
     {
         Task<bool> ExecuteWorkflow(Workflow workflow);
         Task<bool> ExecuteWebhookWorkflow();
+        Task CreateWorkflow(WorkflowDto dto);
     }
 }

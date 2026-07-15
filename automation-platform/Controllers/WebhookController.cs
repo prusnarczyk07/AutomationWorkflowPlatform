@@ -2,6 +2,7 @@
 using automation_platform.Dtos;
 using automation_platform.Services;
 using automation_platform.Models;
+using automation_platform.Repositories;
 
 namespace automation_platform.Controllers
 {
@@ -11,7 +12,7 @@ namespace automation_platform.Controllers
     {
         private readonly ILogger<WebhookController> logger;
         private readonly IWorkflowService service;
-        public WebhookController(ILogger<WebhookController> logger, IWorkflowService service) 
+        public WebhookController(ILogger<WebhookController> logger, IWorkflowService service, IWorkflowRepository repository) 
         { 
             this.logger = logger;
             this.service = service;
@@ -29,5 +30,12 @@ namespace automation_platform.Controllers
             return StatusCode(500);
         }
 
+        [HttpPost("workflow")]
+        public async Task<IActionResult> AddWorkflow(WorkflowDto dto)
+        {            
+            await service.CreateWorkflow(dto);
+
+            return Ok();
+        }
     }
 }
