@@ -58,9 +58,14 @@ namespace automation_platform.Services
             await repository.Add(workflow);
         }
 
-        public async Task<IEnumerable<Workflow>> GetWorkflows()
+        public Task<IEnumerable<Workflow>> GetWorkflows()
         {
-            return await repository.GetAll();
+            return repository.GetAll();
+        }
+
+        public Task<Workflow?> GetWorkflowById(int id)
+        {
+            return repository.GetById(id);
         }
     }
 }

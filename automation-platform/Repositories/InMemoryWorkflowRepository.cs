@@ -8,6 +8,8 @@ namespace automation_platform.Repositories
         {
             new Workflow
             {
+                Id = 1,
+                Name = "Discord notification",
                 Trigger = "webhook",
                 Steps = new List<string> { "discord" }
             }
@@ -30,6 +32,11 @@ namespace automation_platform.Repositories
         public Task<IEnumerable<Workflow>> GetAll()
         {
             return Task.FromResult(workflows.AsEnumerable());
+        }
+
+        public Task<Workflow?> GetById(int id)
+        {
+            return Task.FromResult(workflows.FirstOrDefault(w => w.Id == id));
         }
     }
 }
