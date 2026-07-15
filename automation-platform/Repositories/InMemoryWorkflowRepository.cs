@@ -26,5 +26,10 @@ namespace automation_platform.Repositories
             
             return Task.FromResult(result);
         }
+
+        public Task<IEnumerable<Workflow>> GetAll()
+        {
+            return Task.FromResult(workflows.AsEnumerable());
+        }
     }
 }

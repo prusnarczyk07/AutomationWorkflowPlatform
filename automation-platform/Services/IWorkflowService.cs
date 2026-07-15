@@ -8,5 +8,6 @@ namespace automation_platform.Services
         Task<bool> ExecuteWorkflow(Workflow workflow);
         Task<bool> ExecuteWebhookWorkflow();
         Task CreateWorkflow(WorkflowDto dto);
+        Task<IEnumerable<Workflow>> GetWorkflows();
     }
 }

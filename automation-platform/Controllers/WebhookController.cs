@@ -37,5 +37,13 @@ namespace automation_platform.Controllers
 
             return Ok();
         }
+
+        [HttpGet("workflow")]
+        public async Task<IActionResult> GetWorkflows()
+        {
+            var workflows = await service.GetWorkflows();
+
+            return Ok(workflows);
+        }
     }
 }

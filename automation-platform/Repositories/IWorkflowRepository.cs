@@ -6,5 +6,6 @@ namespace automation_platform.Repositories
     {
         Task<Workflow?> GetByTrigger(string trigger);
         Task Add(Workflow workflow);
+        Task<IEnumerable<Workflow>> GetAll();
     }
 }
