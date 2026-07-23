@@ -30,7 +30,7 @@ namespace automation_platform.Services
 
                 if (handler is null)
                     return false;
-                
+
                 if (!await handler.Execute(dto))
                     return false;
             }
@@ -66,6 +66,11 @@ namespace automation_platform.Services
         public Task<Workflow?> GetWorkflowById(int id)
         {
             return repository.GetById(id);
+        }
+
+        public Task<bool> DeleteWorkflowById(int id)
+        {
+            return repository.DeleteById(id);
         }
     }
 }

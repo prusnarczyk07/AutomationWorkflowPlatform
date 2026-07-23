@@ -38,5 +38,17 @@ namespace automation_platform.Repositories
         {
             return Task.FromResult(workflows.FirstOrDefault(w => w.Id == id));
         }
+
+        public Task<bool> DeleteById(int id)
+        {
+            var workflow = workflows.FirstOrDefault(w => w.Id == id);
+
+            if (workflow is null)
+                return Task.FromResult(false);
+
+            workflows.Remove(workflow);
+            
+            return Task.FromResult(true);
+        }
     }
 }

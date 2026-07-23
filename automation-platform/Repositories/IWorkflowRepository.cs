@@ -8,5 +8,6 @@ namespace automation_platform.Repositories
         Task Add(Workflow workflow);
         Task<IEnumerable<Workflow>> GetAll();
         Task<Workflow?> GetById(int id);
+        Task<bool> DeleteById(int id);
     }
 }

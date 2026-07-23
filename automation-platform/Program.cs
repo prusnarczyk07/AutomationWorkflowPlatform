@@ -12,7 +12,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<IDiscordService, DiscordService>();
 builder.Services.AddScoped<IWorkflowService, WorkflowService>();
 builder.Services.AddScoped<IWorkflowStepHandler, DiscordStepHandler>();
-builder.Services.AddScoped<IWorkflowRepository, InMemoryWorkflowRepository>();
+builder.Services.AddSingleton<IWorkflowRepository, InMemoryWorkflowRepository>();
 
 builder.Services.AddHttpClient();
 

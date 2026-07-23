@@ -56,5 +56,16 @@ namespace automation_platform.Controllers
 
             return Ok(workflow);
         }
+
+        [HttpDelete("workflow/{id}")]
+        public async Task<IActionResult> DeleteWorkflowById(int id)
+        {
+            var deleted = await service.DeleteWorkflowById(id);
+
+            if (deleted is false)
+                return NotFound();
+
+            return NoContent();
+        }
     }
 }
