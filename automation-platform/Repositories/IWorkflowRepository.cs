@@ -9,5 +9,6 @@ namespace automation_platform.Repositories
         Task<IEnumerable<Workflow>> GetAll();
         Task<Workflow?> GetById(int id);
         Task<bool> DeleteById(int id);
+        Task<bool> UpdateById(Workflow workflow, int id);
     }
 }

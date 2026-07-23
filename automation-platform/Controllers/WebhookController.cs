@@ -67,5 +67,23 @@ namespace automation_platform.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("workflow/{id}")]
+        public async Task<IActionResult> UpdateWorkflowById(int id, WorkflowDto dto)
+        {
+            var workflow = new Workflow
+            {
+                Name = dto.Name,
+                Trigger = dto.Trigger,
+                Steps = dto.Steps,
+            };
+
+            var updated = await service.UpdateWorkflowById(workflow, id);
+
+            if (updated is false)
+                return NotFound();
+
+            return NoContent();
+        }
     }
 }

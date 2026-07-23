@@ -50,5 +50,19 @@ namespace automation_platform.Repositories
             
             return Task.FromResult(true);
         }
+
+        public Task<bool> UpdateById(Workflow workflow, int id)
+        {
+            var workflowId = workflows.FirstOrDefault(w => w.Id == id);
+            
+            if (workflowId is null)
+                return Task.FromResult(false);
+
+            workflowId.Name = workflow.Name;
+            workflowId.Trigger = workflow.Trigger;
+            workflowId.Steps = workflow.Steps;
+
+            return Task.FromResult(true);
+        }
     }
 }

@@ -72,5 +72,10 @@ namespace automation_platform.Services
         {
             return repository.DeleteById(id);
         }
+
+        public Task<bool> UpdateWorkflowById(Workflow workflow, int id)
+        {
+            return repository.UpdateById(workflow, id);
+        }
     }
 }
