@@ -1,5 +1,7 @@
+using automation_platform.Data;
 using automation_platform.Repositories;
 using automation_platform.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,12 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<IDiscordService, DiscordService>();
 builder.Services.AddScoped<IWorkflowService, WorkflowService>();
 builder.Services.AddScoped<IWorkflowStepHandler, DiscordStepHandler>();
-builder.Services.AddSingleton<IWorkflowRepository, InMemoryWorkflowRepository>();
+builder.Services.AddScoped<IWorkflowRepository, EfWorkflowRepository>();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
 
 builder.Services.AddHttpClient();
 
