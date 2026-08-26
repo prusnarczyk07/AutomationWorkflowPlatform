@@ -2,6 +2,8 @@
 
 namespace automation_platform.Repositories
 {
+    // Temporary repository used for development and testing.
+    // Data is stored only in memory and is lost after application restart.
     public class InMemoryWorkflowRepository : IWorkflowRepository
     {
         private readonly List<Workflow> workflows = new()
@@ -14,19 +16,19 @@ namespace automation_platform.Repositories
                 Steps = new List<string> { "discord" }
             }
         };
-
-        public Task Add(Workflow workflow)
-        {
-            workflows.Add(workflow);
-
-            return Task.CompletedTask;
-        }
         
         public Task<Workflow?> GetByTrigger(string trigger)
         {
             var result = workflows.FirstOrDefault(t => t.Trigger == trigger);
             
             return Task.FromResult(result);
+        }
+
+        public Task Add(Workflow workflow)
+        {
+            workflows.Add(workflow);
+
+            return Task.CompletedTask;
         }
 
         public Task<IEnumerable<Workflow>> GetAll()
@@ -53,14 +55,14 @@ namespace automation_platform.Repositories
 
         public Task<bool> UpdateById(Workflow workflow, int id)
         {
-            var workflowId = workflows.FirstOrDefault(w => w.Id == id);
+            var foundWorkflow = workflows.FirstOrDefault(w => w.Id == id);
             
-            if (workflowId is null)
+            if (foundWorkflow is null)
                 return Task.FromResult(false);
 
-            workflowId.Name = workflow.Name;
-            workflowId.Trigger = workflow.Trigger;
-            workflowId.Steps = workflow.Steps;
+            foundWorkflow.Name = workflow.Name;
+            foundWorkflow.Trigger = workflow.Trigger;
+            foundWorkflow.Steps = workflow.Steps;
 
             return Task.FromResult(true);
         }
