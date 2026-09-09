@@ -2,7 +2,6 @@
 using automation_platform.Dtos;
 using automation_platform.Services;
 using automation_platform.Models;
-using automation_platform.Repositories;
 
 namespace automation_platform.Controllers
 {
@@ -12,7 +11,7 @@ namespace automation_platform.Controllers
     {
         private readonly ILogger<WebhookController> logger;
         private readonly IWorkflowService service;
-        public WebhookController(ILogger<WebhookController> logger, IWorkflowService service, IWorkflowRepository repository) 
+        public WebhookController(ILogger<WebhookController> logger, IWorkflowService service) 
         { 
             this.logger = logger;
             this.service = service;
@@ -33,7 +32,10 @@ namespace automation_platform.Controllers
         [HttpPost("workflow")]
         public async Task<IActionResult> AddWorkflow(WorkflowDto dto)
         {            
-            await service.CreateWorkflow(dto);
+            var created = await service.CreateWorkflow(dto);
+
+            if (created is false)
+                return BadRequest("Workflow must contain at least one step.");
 
             return Ok();
         }

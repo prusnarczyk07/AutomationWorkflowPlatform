@@ -1,10 +1,19 @@
-﻿namespace automation_platform.Dtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace automation_platform.Dtos
 {
     public class WorkflowDto
     {
-        public int Id { get; set; }
+        [Required]
+        [MaxLength(30)]
         public string Name { get; set; } = string.Empty;
+
+        [Required]
+        [MaxLength(30)]
         public string Trigger { get; set; } = string.Empty;
+
+        [Required]
+        [MaxLength(15)]
         public List<string> Steps { get; set; } = new();
     }
 }

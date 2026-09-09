@@ -47,15 +47,21 @@ namespace automation_platform.Services
             return await ExecuteWorkflow(workflow);
         }
 
-        public async Task CreateWorkflow(WorkflowDto dto)
+        public async Task<bool> CreateWorkflow(WorkflowDto dto)
         {
+            if (dto.Steps.Count == 0)
+                return false;
+
             var workflow = new Workflow
             {
-                Trigger = dto.Trigger,
-                Steps = dto.Steps
+                Name = dto.Name.Trim(),
+                Trigger = dto.Trigger.Trim(),
+                Steps = dto.Steps.Select(step => step.Trim()).ToList()
             };
 
             await repository.Add(workflow);
+
+            return true;
         }
 
         public Task<IEnumerable<Workflow>> GetWorkflows()
