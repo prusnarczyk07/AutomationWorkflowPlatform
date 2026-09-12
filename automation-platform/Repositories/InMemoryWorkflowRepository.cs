@@ -24,11 +24,11 @@ namespace automation_platform.Repositories
             return Task.FromResult(result);
         }
 
-        public Task Add(Workflow workflow)
+        public Task<Workflow> Add(Workflow workflow)
         {
             workflows.Add(workflow);
 
-            return Task.CompletedTask;
+            return Task.FromResult(workflow);
         }
 
         public Task<IEnumerable<Workflow>> GetAll()

@@ -34,10 +34,10 @@ namespace automation_platform.Controllers
         {            
             var created = await service.CreateWorkflow(dto);
 
-            if (created is false)
+            if (created is null)
                 return BadRequest("Workflow must contain at least one step.");
 
-            return Ok();
+            return CreatedAtAction(nameof(GetWorkflowById), new {id = created.Id}, created);
         }
 
         [HttpGet("workflows")]

@@ -20,10 +20,12 @@ namespace automation_platform.Repositories
             return result;
         }
 
-        public async Task Add(Workflow workflow)
+        public async Task<Workflow> Add(Workflow workflow)
         {
             await context.Workflows.AddAsync(workflow);
             await context.SaveChangesAsync();
+
+            return workflow;
         }
 
         public async Task<IEnumerable<Workflow>> GetAll()

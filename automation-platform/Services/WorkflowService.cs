@@ -47,10 +47,10 @@ namespace automation_platform.Services
             return await ExecuteWorkflow(workflow);
         }
 
-        public async Task<bool> CreateWorkflow(WorkflowDto dto)
+        public async Task<Workflow?> CreateWorkflow(WorkflowDto dto)
         {
             if (dto.Steps.Count == 0)
-                return false;
+                return null;
 
             var workflow = new Workflow
             {
@@ -61,7 +61,7 @@ namespace automation_platform.Services
 
             await repository.Add(workflow);
 
-            return true;
+            return workflow;
         }
 
         public Task<IEnumerable<Workflow>> GetWorkflows()
