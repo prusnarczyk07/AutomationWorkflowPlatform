@@ -26,6 +26,11 @@ namespace automation_platform.Repositories
 
         public Task<Workflow> Add(Workflow workflow)
         {
+            if (workflows.Count == 0)
+                workflow.Id = 1;
+            else
+                workflow.Id = workflows.Max(w => w.Id) + 1;
+
             workflows.Add(workflow);
 
             return Task.FromResult(workflow);
