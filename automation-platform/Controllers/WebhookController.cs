@@ -20,7 +20,7 @@ namespace automation_platform.Controllers
         [HttpPost]
         public async Task<IActionResult> AddWebhook(WebhookDto dto)
         {            
-            var request = await service.ExecuteWebhookWorkflow();
+            var request = await service.ExecuteWebhookWorkflow(dto);
             logger.LogInformation($"Webhook: \n Id: {dto.Id},\n Name: {dto.Name},\n Description: {dto.Description}");
 
             if (request is true)
@@ -73,14 +73,7 @@ namespace automation_platform.Controllers
         [HttpPut("workflow/{id}")]
         public async Task<IActionResult> UpdateWorkflowById(int id, WorkflowDto dto)
         {
-            var workflow = new Workflow
-            {
-                Name = dto.Name,
-                Trigger = dto.Trigger,
-                Steps = dto.Steps,
-            };
-
-            var updated = await service.UpdateWorkflowById(workflow, id);
+            var updated = await service.UpdateWorkflowById(dto, id);
 
             if (updated is false)
                 return NotFound();

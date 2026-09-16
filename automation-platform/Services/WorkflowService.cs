@@ -15,15 +15,8 @@ namespace automation_platform.Services
             this.repository = repository;
         }
 
-        public async Task<bool> ExecuteWorkflow(Workflow workflow)
+        public async Task<bool> ExecuteWorkflow(Workflow workflow, WebhookDto dto)
         {
-            var dto = new WebhookDto
-            {
-                Id = 1,
-                Name = "workflow",
-                Description = "step executed"
-            };
-
             foreach (string step in workflow.Steps)
             {
                 var handler = handlers.FirstOrDefault(x => x.StepName == step);
@@ -37,14 +30,14 @@ namespace automation_platform.Services
             return true;
         }
 
-        public async Task<bool> ExecuteWebhookWorkflow()
+        public async Task<bool> ExecuteWebhookWorkflow(WebhookDto dto)
         {
             var workflow = await repository.GetByTrigger("webhook");
 
             if (workflow is null)
                 return false;
 
-            return await ExecuteWorkflow(workflow);
+            return await ExecuteWorkflow(workflow, dto);
         }
 
         public async Task<Workflow?> CreateWorkflow(WorkflowDto dto)
@@ -79,8 +72,15 @@ namespace automation_platform.Services
             return repository.DeleteById(id);
         }
 
-        public Task<bool> UpdateWorkflowById(Workflow workflow, int id)
+        public Task<bool> UpdateWorkflowById(WorkflowDto dto, int id)
         {
+            var workflow = new Workflow
+            {
+                Name = dto.Name.Trim(),
+                Trigger = dto.Trigger.Trim(),
+                Steps = dto.Steps.Select(step => step.Trim()).ToList(),
+            };
+
             return repository.UpdateById(workflow, id);
         }
     }
