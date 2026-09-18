@@ -14,6 +14,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<IDiscordService, DiscordService>();
 builder.Services.AddScoped<IWorkflowService, WorkflowService>();
 builder.Services.AddScoped<IWorkflowStepHandler, DiscordStepHandler>();
+builder.Services.AddScoped<IWorkflowStepHandler, LogStepHandler>();
 builder.Services.AddScoped<IWorkflowRepository, EfWorkflowRepository>();
 
 // InMemory repository - used for testing without database
