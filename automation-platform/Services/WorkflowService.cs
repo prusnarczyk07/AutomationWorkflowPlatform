@@ -30,9 +30,9 @@ namespace automation_platform.Services
             return true;
         }
 
-        public async Task<bool> ExecuteWebhookWorkflow(WebhookDto dto)
+        public async Task<bool> ExecuteWebhookWorkflow(string trigger, WebhookDto dto)
         {
-            var workflow = await repository.GetByTrigger("webhook");
+            var workflow = await repository.GetByTrigger(trigger);
 
             if (workflow is null)
                 return false;

@@ -11,16 +11,16 @@ namespace automation_platform.Controllers
     {
         private readonly ILogger<WebhookController> logger;
         private readonly IWorkflowService service;
-        public WebhookController(ILogger<WebhookController> logger, IWorkflowService service) 
-        { 
+        public WebhookController(ILogger<WebhookController> logger, IWorkflowService service)
+        {
             this.logger = logger;
             this.service = service;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddWebhook(WebhookDto dto)
+        [HttpPost("{trigger}")]
+        public async Task<IActionResult> AddWebhook(string trigger, [FromBody]WebhookDto dto)
         {            
-            var request = await service.ExecuteWebhookWorkflow(dto);
+            var request = await service.ExecuteWebhookWorkflow(trigger, dto);
             logger.LogInformation($"Webhook: \n Id: {dto.Id},\n Name: {dto.Name},\n Description: {dto.Description}");
 
             if (request is true)
