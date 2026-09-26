@@ -13,7 +13,7 @@ namespace automation_platform.Services
 
         public string StepName => "log";
 
-        public Task<bool> Execute(WebhookDto dto)
+        public Task<bool> Execute(WebhookDto dto, WorkflowStepDto stepDto)
         {
             logger.LogInformation("\t--Webhook received: {WebhookName} - {Description} --", dto.Name, dto.Description);
 

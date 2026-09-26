@@ -14,6 +14,6 @@ namespace automation_platform.Dtos
 
         [Required]
         [MaxLength(15)]
-        public List<string> Steps { get; set; } = new();
+        public List<WorkflowStepDto> Steps { get; set; } = new();
     }
 }

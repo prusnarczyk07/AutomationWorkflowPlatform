@@ -22,22 +22,29 @@ namespace automation_platform.Services
         {
             logger.LogInformation("\n---Starting workflow {WorkflowId} ({WorkflowName})---\n", workflow.Id, workflow.Name);
             
-            foreach (string step in workflow.Steps)
+            foreach (var step in workflow.Steps)
             {
-                logger.LogInformation("\t--Executing step {Step} in workflow {WorkflowId}--", step, workflow.Id);
+                logger.LogInformation("\t--Executing step {Step} in workflow {WorkflowId}--", step.Type, workflow.Id);
 
-                var handler = handlers.FirstOrDefault(x => x.StepName == step);
+                var stepDto = new WorkflowStepDto
+                {
+                    Type = step.Type,
+                    Url = step.Url,
+                    Method = step.Method,
+                };
+
+                var handler = handlers.FirstOrDefault(x => x.StepName == step.Type);
 
                 if (handler is null)
                 {
-                    logger.LogError("No handler found for step {Step} in workflow {WorkflowId}", step, workflow.Id);
+                    logger.LogError("No handler found for step {Step} in workflow {WorkflowId}", step.Type, workflow.Id);
                     
                     return false;
                 }
 
-                if (!await handler.Execute(dto))
+                if (!await handler.Execute(dto, stepDto))
                 {
-                    logger.LogError("Step {Step} failed in workflow {WorkflowId}", step, workflow.Id);
+                    logger.LogError("Step {Step} failed in workflow {WorkflowId}", step.Type, workflow.Id);
 
                     return false;
                 }

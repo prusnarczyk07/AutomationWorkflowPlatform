@@ -5,6 +5,6 @@ namespace automation_platform.Services
     public interface IWorkflowStepHandler
     {
         string StepName { get; }
-        Task<bool> Execute(WebhookDto dto);
+        Task<bool> Execute(WebhookDto dto, WorkflowStepDto stepDto);
     }
 }
