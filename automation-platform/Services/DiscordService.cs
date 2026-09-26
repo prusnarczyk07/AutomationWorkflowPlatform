@@ -8,12 +8,14 @@ namespace automation_platform.Services
         HttpClient client;
         IConfiguration config;
         string webhookUrl;
+        private readonly ILogger<DiscordService> logger;
         
-        public DiscordService(HttpClient client, IConfiguration config) 
+        public DiscordService(HttpClient client, IConfiguration config, ILogger<DiscordService> logger) 
         { 
             this.client = client;
             this.config = config;
-            webhookUrl = config.GetValue<string>("Discord:WebhookUrl");
+            this.logger = logger;
+            webhookUrl = config.GetValue<string>("Discord:WebhookUrl") ?? throw new InvalidOperationException("Discord:WebhookUrl is not configured.");
         }
 
         public async Task<bool> SendDiscordMessage(WebhookDto dto)
@@ -25,6 +27,8 @@ namespace automation_platform.Services
             };
 
             var result = await client.PostAsJsonAsync(webhookUrl, payload);
+
+            logger.LogInformation("\t--Discord returned HTTP {StatusCode}--", (int)result.StatusCode);
 
             return result.IsSuccessStatusCode;
         }

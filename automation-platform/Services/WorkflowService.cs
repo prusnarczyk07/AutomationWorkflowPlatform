@@ -1,6 +1,7 @@
 ﻿using automation_platform.Dtos;
 using automation_platform.Models;
 using automation_platform.Repositories;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace automation_platform.Services
 {
@@ -8,25 +9,43 @@ namespace automation_platform.Services
     {
         private readonly IEnumerable<IWorkflowStepHandler> handlers;
         private readonly IWorkflowRepository repository;
+        private readonly ILogger<WorkflowService> logger;
 
-        public WorkflowService(IEnumerable<IWorkflowStepHandler> handlers, IWorkflowRepository repository)
+        public WorkflowService(IEnumerable<IWorkflowStepHandler> handlers, IWorkflowRepository repository, ILogger<WorkflowService> logger)
         {
             this.handlers = handlers;
             this.repository = repository;
+            this.logger = logger;
         }
 
         public async Task<bool> ExecuteWorkflow(Workflow workflow, WebhookDto dto)
         {
+            logger.LogInformation("\n---Starting workflow {WorkflowId} ({WorkflowName})---\n", workflow.Id, workflow.Name);
+            
             foreach (string step in workflow.Steps)
             {
+                logger.LogInformation("\t--Executing step {Step} in workflow {WorkflowId}--", step, workflow.Id);
+
                 var handler = handlers.FirstOrDefault(x => x.StepName == step);
 
                 if (handler is null)
+                {
+                    logger.LogError("No handler found for step {Step} in workflow {WorkflowId}", step, workflow.Id);
+                    
                     return false;
+                }
 
                 if (!await handler.Execute(dto))
+                {
+                    logger.LogError("Step {Step} failed in workflow {WorkflowId}", step, workflow.Id);
+
                     return false;
+                }
+                    
             }
+
+            logger.LogInformation("\n---Workflow {WorkflowId} completed successfully---\n", workflow.Id);
+            
             return true;
         }
 
@@ -72,16 +91,20 @@ namespace automation_platform.Services
             return repository.DeleteById(id);
         }
 
-        public Task<bool> UpdateWorkflowById(WorkflowDto dto, int id)
+        public async Task<Workflow?> UpdateWorkflowById(WorkflowDto dto, int id)
         {
-            var workflow = new Workflow
-            {
-                Name = dto.Name.Trim(),
-                Trigger = dto.Trigger.Trim(),
-                Steps = dto.Steps.Select(step => step.Trim()).ToList(),
-            };
+            var workflow = await repository.GetById(id);
 
-            return repository.UpdateById(workflow, id);
+            if (workflow is null)
+                return null;
+
+            workflow.Name = dto.Name.Trim();
+            workflow.Trigger = dto.Trigger.Trim();
+            workflow.Steps = dto.Steps.Select(step => step.Trim()).ToList();
+
+            await repository.UpdateById(workflow, id);
+            
+            return workflow;
         }
     }
 }

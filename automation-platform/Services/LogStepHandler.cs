@@ -15,8 +15,7 @@ namespace automation_platform.Services
 
         public Task<bool> Execute(WebhookDto dto)
         {
-            
-            logger.LogInformation("step executed");
+            logger.LogInformation("\t--Webhook received: {WebhookName} - {Description} --", dto.Name, dto.Description);
 
             return Task.FromResult(true);
         }

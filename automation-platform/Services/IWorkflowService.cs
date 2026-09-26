@@ -11,6 +11,6 @@ namespace automation_platform.Services
         Task<IEnumerable<Workflow>> GetWorkflows();
         Task<Workflow?> GetWorkflowById(int id);
         Task<bool> DeleteWorkflowById(int id);
-        Task<bool> UpdateWorkflowById(WorkflowDto dto, int id);
+        Task<Workflow?> UpdateWorkflowById(WorkflowDto dto, int id);
     }
 }

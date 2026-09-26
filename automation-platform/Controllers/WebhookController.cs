@@ -9,11 +9,9 @@ namespace automation_platform.Controllers
     [Route("api/[controller]")]
     public class WebhookController : ControllerBase
     {
-        private readonly ILogger<WebhookController> logger;
         private readonly IWorkflowService service;
         public WebhookController(ILogger<WebhookController> logger, IWorkflowService service)
         {
-            this.logger = logger;
             this.service = service;
         }
 
@@ -21,7 +19,6 @@ namespace automation_platform.Controllers
         public async Task<IActionResult> AddWebhook(string trigger, [FromBody]WebhookDto dto)
         {            
             var request = await service.ExecuteWebhookWorkflow(trigger, dto);
-            logger.LogInformation($"Webhook: \n Id: {dto.Id},\n Name: {dto.Name},\n Description: {dto.Description}");
 
             if (request is true)
                 return Ok();
@@ -75,10 +72,10 @@ namespace automation_platform.Controllers
         {
             var updated = await service.UpdateWorkflowById(dto, id);
 
-            if (updated is false)
+            if (updated is null)
                 return NotFound();
 
-            return NoContent();
+            return Ok(updated);
         }
     }
 }

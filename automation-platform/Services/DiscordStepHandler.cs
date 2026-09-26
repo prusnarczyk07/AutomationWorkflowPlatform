@@ -5,7 +5,8 @@ namespace automation_platform.Services
     public class DiscordStepHandler : IWorkflowStepHandler
     {
         private readonly IDiscordService discordService;
-        public DiscordStepHandler(IDiscordService discordService)
+
+        public DiscordStepHandler(IDiscordService discordService, ILogger<DiscordStepHandler> logger)
         {
             this.discordService = discordService;
         }
