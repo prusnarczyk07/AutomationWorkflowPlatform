@@ -1,14 +1,36 @@
-﻿using automation_platform.Dtos;
+﻿using System.Text.Json;
+using System.Text;
+using automation_platform.Dtos;
+using automation_platform.Models;
 
 namespace automation_platform.Services
 {
     public class HttpStepHandler : IWorkflowStepHandler
     {
+        private readonly HttpClient client;
+
+        public HttpStepHandler(HttpClient client)
+        {
+            this.client = client;
+        }
+
         public string StepName => "http";
 
-        public Task<bool> Execute(WebhookDto dto, WorkflowStepDto stepDto)
+        public async Task<bool> Execute(WebhookDto dto, WorkflowStep step)
         {
-            Task.FromResult(true);
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(step.Url),
+                Method = new HttpMethod(step.Method)
+            };
+
+            string json = JsonSerializer.Serialize(dto);
+
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.SendAsync(request);
+
+            return response.IsSuccessStatusCode;
         }
         
     }

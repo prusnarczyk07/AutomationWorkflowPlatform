@@ -13,7 +13,13 @@ namespace automation_platform.Repositories
                 Id = 1,
                 Name = "Discord notification",
                 Trigger = "webhook",
-                Steps = new List<WorkflowStep> { "discord" }
+                Steps = new List<WorkflowStep> 
+                {
+                    new WorkflowStep
+                    {
+                        Type = "discord"
+                    }
+                }
             }
         };
         

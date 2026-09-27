@@ -15,7 +15,7 @@ namespace automation_platform.Repositories
 
         public async Task<Workflow?> GetByTrigger(string trigger)
         {
-            var result = await context.Workflows.FirstOrDefaultAsync(t => t.Trigger == trigger);
+            var result = await context.Workflows.Include(w => w.Steps).FirstOrDefaultAsync(t => t.Trigger == trigger);
 
             return result;
         }
@@ -44,7 +44,7 @@ namespace automation_platform.Repositories
 
         public async Task<bool> DeleteById(int id)
         {
-            var workflow = await context.Workflows.FindAsync(id);
+            var workflow = await context.Workflows.Include(w => w.Steps).FirstOrDefaultAsync(w => w.Id == id);
             
             if (workflow is null)
                 return false;

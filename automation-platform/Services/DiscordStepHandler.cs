@@ -1,4 +1,5 @@
 ﻿using automation_platform.Dtos;
+using automation_platform.Models;
 
 namespace automation_platform.Services
 {
@@ -13,7 +14,7 @@ namespace automation_platform.Services
 
         public string StepName => "discord";
 
-        public async Task<bool> Execute(WebhookDto dto, WorkflowStepDto stepDto)
+        public async Task<bool> Execute(WebhookDto dto, WorkflowStep step)
         {
             return await discordService.SendDiscordMessage(dto);
         }

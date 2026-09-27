@@ -26,13 +26,6 @@ namespace automation_platform.Services
             {
                 logger.LogInformation("\t--Executing step {Step} in workflow {WorkflowId}--", step.Type, workflow.Id);
 
-                var stepDto = new WorkflowStepDto
-                {
-                    Type = step.Type,
-                    Url = step.Url,
-                    Method = step.Method,
-                };
-
                 var handler = handlers.FirstOrDefault(x => x.StepName == step.Type);
 
                 if (handler is null)
@@ -42,7 +35,7 @@ namespace automation_platform.Services
                     return false;
                 }
 
-                if (!await handler.Execute(dto, stepDto))
+                if (!await handler.Execute(dto, step))
                 {
                     logger.LogError("Step {Step} failed in workflow {WorkflowId}", step.Type, workflow.Id);
 
@@ -71,11 +64,18 @@ namespace automation_platform.Services
             if (dto.Steps.Count == 0)
                 return null;
 
+            var steps = dto.Steps.Select(step => new WorkflowStep 
+            {  
+                Type = step.Type.Trim(),
+                Url = step.Url.Trim(),
+                Method = step.Method.Trim(),
+            }).ToList();
+
             var workflow = new Workflow
             {
                 Name = dto.Name.Trim(),
                 Trigger = dto.Trigger.Trim(),
-                Steps = dto.Steps.Select(step => step.Trim()).ToList()
+                Steps = steps
             };
 
             await repository.Add(workflow);
@@ -105,9 +105,16 @@ namespace automation_platform.Services
             if (workflow is null)
                 return null;
 
+            var steps = dto.Steps.Select(step => new WorkflowStep
+            {
+                Type = step.Type.Trim(),
+                Url = step.Url.Trim(),
+                Method = step.Method.Trim(),
+            }).ToList();
+
             workflow.Name = dto.Name.Trim();
             workflow.Trigger = dto.Trigger.Trim();
-            workflow.Steps = dto.Steps.Select(step => step.Trim()).ToList();
+            workflow.Steps = steps;
 
             await repository.UpdateById(workflow, id);
             
