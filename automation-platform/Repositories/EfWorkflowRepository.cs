@@ -30,14 +30,14 @@ namespace automation_platform.Repositories
 
         public async Task<IEnumerable<Workflow>> GetAll()
         {
-            var result = await context.Workflows.ToListAsync();
+            var result = await context.Workflows.Include(w => w.Steps).ToListAsync();
 
             return result;
         }
 
         public async Task<Workflow?> GetById(int id)
         {
-            var result = await context.Workflows.FindAsync(id);
+            var result = await context.Workflows.Include(w => w.Steps).FirstOrDefaultAsync(w => w.Id == id);
             
             return result;
         }
