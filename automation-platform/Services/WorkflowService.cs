@@ -20,7 +20,7 @@ namespace automation_platform.Services
 
         public async Task<bool> ExecuteWorkflow(Workflow workflow, WebhookDto dto)
         {
-            logger.LogInformation("\n---Starting workflow {WorkflowId} ({WorkflowName})---\n", workflow.Id, workflow.Name);
+            logger.LogInformation("\n\n---Starting workflow {WorkflowId} ({WorkflowName})---\n", workflow.Id, workflow.Name);
             
             foreach (var step in workflow.Steps)
             {
@@ -44,7 +44,7 @@ namespace automation_platform.Services
                     
             }
 
-            logger.LogInformation("\n---Workflow {WorkflowId} completed successfully---\n", workflow.Id);
+            logger.LogInformation("\n---Workflow {WorkflowId} completed successfully---\n\n", workflow.Id);
             
             return true;
         }
