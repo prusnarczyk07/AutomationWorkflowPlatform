@@ -23,7 +23,7 @@ namespace automation_platform.Controllers
             if (request is true)
                 return Ok();
             
-            return StatusCode(500);
+            return Problem(statusCode: 500, title: "Workflow execution failed", detail: "One of the workflow steps could not be executed");
         }
 
         [HttpPost("workflow")]

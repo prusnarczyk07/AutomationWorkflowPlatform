@@ -64,6 +64,12 @@ namespace automation_platform.Services
             if (dto.Steps.Count == 0)
                 return null;
 
+            foreach (var step in dto.Steps)
+            {
+                if (!Uri.TryCreate(step.Url, UriKind.Absolute, out var uri) || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+                    return null;
+            }
+
             var steps = dto.Steps.Select(step => new WorkflowStep 
             {  
                 Type = step.Type.Trim(),

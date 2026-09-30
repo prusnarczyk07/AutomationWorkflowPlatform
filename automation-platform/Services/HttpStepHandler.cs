@@ -2,6 +2,7 @@
 using System.Text;
 using automation_platform.Dtos;
 using automation_platform.Models;
+using System.Net.Sockets;
 
 namespace automation_platform.Services
 {
@@ -32,12 +33,20 @@ namespace automation_platform.Services
 
             request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await client.SendAsync(request);
+            try
+            {
+                var response = await client.SendAsync(request);
 
-            logger.LogInformation("\t--Http returned {StatusCode}", (int)response.StatusCode);
+                logger.LogInformation("\t--Http returned {StatusCode}", (int)response.StatusCode);
 
-            return response.IsSuccessStatusCode;
-        }
-        
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "\t!!-HTTP request failed-!!");
+
+                return false;
+            }
+        }    
     }
 }
