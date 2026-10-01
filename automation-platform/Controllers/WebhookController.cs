@@ -31,10 +31,10 @@ namespace automation_platform.Controllers
         {            
             var created = await service.CreateWorkflow(dto);
 
-            if (created is null)
-                return BadRequest("Workflow must contain at least one step.");
-
-            return CreatedAtAction(nameof(GetWorkflowById), new {id = created.Id}, created);
+            if (created.workflow is null)
+                return BadRequest(created.error);
+            
+            return CreatedAtAction(nameof(GetWorkflowById), new {id = created.workflow.Id}, created.workflow);
         }
 
         [HttpGet("workflows")]
@@ -72,10 +72,15 @@ namespace automation_platform.Controllers
         {
             var updated = await service.UpdateWorkflowById(dto, id);
 
-            if (updated is null)
-                return NotFound();
-
-            return Ok(updated);
+            if (updated.workflow is null)
+            {
+                if (updated.error == "Workflow not found")
+                    return NotFound(updated.error);
+                
+                return BadRequest(updated.error);
+            }
+            
+            return Ok(updated.workflow);
         }
     }
 }

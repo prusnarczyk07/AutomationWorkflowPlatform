@@ -1,4 +1,5 @@
 ﻿using automation_platform.Dtos;
+using automation_platform.Migrations;
 using automation_platform.Models;
 using automation_platform.Repositories;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -59,15 +60,15 @@ namespace automation_platform.Services
             return await ExecuteWorkflow(workflow, dto);
         }
 
-        public async Task<Workflow?> CreateWorkflow(WorkflowDto dto)
+        public async Task<(Workflow? workflow, string? error)> CreateWorkflow(WorkflowDto dto)
         {
             if (dto.Steps.Count == 0)
-                return null;
+                return (null, "Workflow must contain at least one step");
 
             foreach (var step in dto.Steps)
             {
                 if (!Uri.TryCreate(step.Url, UriKind.Absolute, out var uri) || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
-                    return null;
+                    return (null, "Step URL must be a valid HTTP or HTTPS URL");
             }
 
             var steps = dto.Steps.Select(step => new WorkflowStep 
@@ -86,7 +87,7 @@ namespace automation_platform.Services
 
             await repository.Add(workflow);
 
-            return workflow;
+            return (workflow, null);
         }
 
         public Task<IEnumerable<Workflow>> GetWorkflows()
@@ -104,12 +105,18 @@ namespace automation_platform.Services
             return repository.DeleteById(id);
         }
 
-        public async Task<Workflow?> UpdateWorkflowById(WorkflowDto dto, int id)
+        public async Task<(Workflow? workflow, string? error)> UpdateWorkflowById(WorkflowDto dto, int id)
         {
             var workflow = await repository.GetById(id);
 
             if (workflow is null)
-                return null;
+                return (null, "Workflow not found");
+
+            foreach (var step in dto.Steps)
+            {
+                if (!Uri.TryCreate(step.Url, UriKind.Absolute, out var uri) || uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
+                    return (null, "Step URL must be a valid HTTP or HTTPS URL");
+            }
 
             var steps = dto.Steps.Select(step => new WorkflowStep
             {
@@ -124,7 +131,7 @@ namespace automation_platform.Services
 
             await repository.UpdateById(workflow, id);
             
-            return workflow;
+            return (workflow, null);
         }
     }
 }
