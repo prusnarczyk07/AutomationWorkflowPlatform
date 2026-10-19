@@ -50,14 +50,34 @@ Start the application:
 ```bash
 docker compose up -d --build
 
+```
+
 The API will be available at:
 
 http://localhost:8080
 
+
 Stop the application:
+```bash
+docker compose down
+
 ```
 
-docker compose down
+
+## Configuration
+
+Discord notifications require a Discord webhook URL. Set the `DISCORD_WEBHOOK_URL` environment variable before starting Docker Compose.
+
+In PowerShell:
+
+```bash
+
+$env:DISCORD_WEBHOOK_URL = "YOUR_DISCORD_WEBHOOK_URL"
+
+docker compose up -d --build
+```
+
+Keep the webhook URL secret. Do not commit it to source control.
 
 ## API
 
@@ -87,6 +107,35 @@ Example webhook body:
   "name": "Example webhook",
   "description": "Test webhook payload"
 }
+
+Example Discord workflow:
+
+{
+  "name": "Discord test",
+  "trigger": "discord-test",
+  "steps": [
+    {
+      "type": "discord",
+      "url": "https://example.com",
+      "method": "POST"
+    }
+  ]
+}
+
+Example Discord workflow execution:
+
+POST /api/Webhook/discord-test
+
+Example webhook body:
+
+{
+  "id": 1,
+  "name": "Test Discord",
+  "description": "Test message from Automation Platform"
+}
+
+
+The Discord step uses the webhook URL configured through DISCORD_WEBHOOK_URL.
 
 Get all workflows:
 
