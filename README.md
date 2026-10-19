@@ -23,28 +23,11 @@ The application allows users to create workflows consisting of multiple steps an
 
 The application follows a simple layered architecture:
 
-Controller
-    ↓
-Service
-    ↓
-Repository
-    ↓
-Entity Framework Core
-    ↓
-PostgreSQL
+Controller -> Service -> Repository -> Entity Framework Core -> PostgreSQL
 
 ### Workflow execution
 
-Webhook
-   ↓
-Workflow
-   ↓
-Workflow Steps
-   ↓
-Step Handlers
-   ├── HTTP
-   ├── Discord
-   └── Log
+Webhook -> Workflow -> Workflow Steps -> Step Handlers - HTTP/Discord/Log
 
 ## Technologies
 
